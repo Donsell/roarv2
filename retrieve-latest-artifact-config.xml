@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <customWorkspace>/home/diyuser/roarv2</customWorkspace>
+  <builders>
+    <hudson.tasks.Shell>
+      <command># Artifactory location
+server=http://localhost:8082/artifactory
+repo=libs-snapshot-local
+
+# Maven artifact location
+name=web
+artifact=com/demo/pipeline/$name
+path=$server/$repo/$artifact
+version=`curl -s $path/maven-metadata.xml | grep latest | sed &quot;s/.*&lt;latest&gt;\([^&lt;]*\)&lt;\/latest&gt;.*/\1/&quot;`
+#version=`curl -s $path/maven-metadata.xml | grep &quot;&lt;version&gt;&quot; | sed &quot;s/.*&lt;version&gt;\([^&lt;]*\)&lt;\/version&gt;.*/\1/&quot;`
+build=`curl -s $path/$version/maven-metadata.xml | grep &apos;&lt;value&gt;&apos; | head -1 | sed &quot;s/.*&lt;value&gt;\([^&lt;]*\)&lt;\/value&gt;.*/\1/&quot;`
+war=$name-$build.war
+url=$path/$version/$war
+
+# Download
+echo $url
+wget -q -N $url</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,18 @@
+
+
+version = '1.0.0-SNAPSHOT'
+group = 'com.demo.pipeline'
+apply plugin: "java"
+
+dependencies {
+compile(group: project.group, name: project.name, version: '1.0.0-20160407.024905-1', ext: 'war')
+}
+
+ext.destinationDir=file("$buildDir/download/war")
+
+task retrieveArtifacts(type:Copy) {
+     from configurations.compile
+     into project.buildDir
+}
+
+
